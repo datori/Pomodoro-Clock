@@ -3,6 +3,7 @@ $(document).ready(function(){
 	$rest = $("#rest");
 	work_val = Number($work.text());
 	rest_val = Number($rest.text());
+
 	$(".increment-work").click(function(){
 		work_val += 1;
 		updateVal();
@@ -22,10 +23,19 @@ $(document).ready(function(){
 	});
 
 	$("#start").click(function(){
-		$("body").animate({backgroundColor:"blue"}, work_val * 1000 * 60, 
+		// Begin rotator animation.
+		$(".work-rotator").css({"opacity":"1", "transform":"rotate(360deg)","transition": `opacity 0.5s linear, transform ${work_val}s linear`});
+		$("body").animate({backgroundColor:"#2196f3"}, work_val * 1000, 
 			function(){
-				$("body").animate({backgroundColor:"rgb(250,250,250)"}, 0);
-				$("body").animate({backgroundColor:"green"}, rest_val * 1000 * 60);
+				// Remove first rotator.
+				$(".work-rotator").css({"opacity":"0"});
+				// Begin second rotator.
+				$(".rest-rotator").css({"opacity":"1", "transform":"rotate(360deg)","transition": `opacity .5s linear, transform ${rest_val}s linear`});
+				$("body").animate({backgroundColor:"rgb(205,205,205)"}, 0);
+				$("body").animate({backgroundColor:"#4caf50"}, rest_val * 1000, function(){
+					// Remove second rotator.
+					$(".rest-rotator").css({"opacity":"0"});
+				});
 				$("body").animate({backgroundColor:"rgb(50,50,50)"}, 500);
 			}
 		);
