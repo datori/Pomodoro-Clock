@@ -23,28 +23,31 @@ $(document).ready(function(){
 	});
 
 	$("#start").click(function(){
-		// Begin rotator animation.
-		$(".work-rotator").css({"opacity":"1", "transform":"rotate(360deg)","transition": `opacity 0.5s linear, transform ${work_val}s linear`});
-		$("body").animate({backgroundColor:"#2196f3"}, work_val * 1000, 
+		$workRot = $(".work-rotator");
+		$restRot = $(".rest-rotator");
+
+		// Begin first rotator.
+		$workRot.css({"opacity":"1", "transform":"rotate(360deg)","transition": `opacity 0.5s linear, transform ${work_val * 60}s linear`});
+		// Animate BG to blue while in work.
+		$("body").animate({backgroundColor:"#2196f3"}, work_val * 1000 * 60, 
 			function(){
-				// Remove first rotator.
-				$(".work-rotator").css({"opacity":"0"});
+				// Remove first rotator. Fade transition is 500ms, so rotate to start is delayed 500ms.
+				$workRot.css({"opacity":"0"});
+				setTimeout(function(){ $workRot.css("transform", "rotate(0deg)") }, 500);
 				// Begin second rotator.
-				$(".rest-rotator").css({"opacity":"1", "transform":"rotate(360deg)","transition": `opacity .5s linear, transform ${rest_val}s linear`});
+				$restRot.css({"opacity":"1", "transform":"rotate(360deg)","transition": `opacity .5s linear, transform ${rest_val * 60}s linear`});
+				// BG to white, both to clear pallete, and to provide visual feedback to the user.
 				$("body").animate({backgroundColor:"rgb(205,205,205)"}, 0);
-				$("body").animate({backgroundColor:"#4caf50"}, rest_val * 1000, function(){
+				// Begin animation to green while in rest.
+				$("body").animate({backgroundColor:"#4caf50"}, rest_val * 1000 * 60, function(){
 					// Remove second rotator.
-					$(".rest-rotator").css({"opacity":"0"});
+					$restRot.css({"opacity":"0"});
+					setTimeout(function(){ $restRot.css("transform", "rotate(0deg)") }, 500)
 				});
+				// Return to start BG.
 				$("body").animate({backgroundColor:"rgb(50,50,50)"}, 500);
 			}
 		);
-	});
-
-	$("#reset").click(function(){
-		work_val = 1;
-		rest_val = 1;
-		updateVal();
 	});
 
 	function updateVal(){
